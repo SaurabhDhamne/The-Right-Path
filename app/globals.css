@@ -1,0 +1,5 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+html { scroll-behavior: auto; } /* smooth scrolling is handled in lib/scroll.ts */
+:focus-visible { outline: 2px solid #F5B921; outline-offset: 2px; }
