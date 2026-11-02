@@ -166,7 +166,7 @@ export function Contact() {
           <h2 className={h2}>Request a consultation</h2>
           <p className="mt-4 text-mist">Choose Student or Institution, tell us what you need, and we will reply within 24 hours.</p>
           <dl className="mt-8 space-y-3 text-mist">
-            <div><dt className="font-bold text-white">Phone</dt><dd>{site.phone}</dd></div>
+            <div><dt className="font-bold text-white">Phone</dt><dd>{site.phone}</dd><dd>{site.phone2}</dd></div>
             <div><dt className="font-bold text-white">Email</dt><dd>{site.email}</dd></div>
             <div><dt className="font-bold text-white">Office</dt><dd>{site.address}</dd></div>
           </dl>

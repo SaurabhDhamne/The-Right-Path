@@ -21,12 +21,12 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 bg-ink text-white">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
+    <header className="sticky top-0 z-50 bg-white text-ink shadow-sm">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-1">
         <ScrollLink id="home"><Logo /></ScrollLink>
         <nav className="hidden gap-6 text-sm font-semibold lg:flex">
           {nav.slice(1).map((n) => (
-            <ScrollLink key={n.id} id={n.id} className={`border-b-2 py-1 transition-colors ${active === n.id ? "border-brand text-white" : "border-transparent text-mist hover:text-white"}`}>
+            <ScrollLink key={n.id} id={n.id} className={`border-b-2 py-1 transition-colors ${active === n.id ? "border-brand text-ink" : "border-transparent text-ink/60 hover:text-ink"}`}>
               {n.label}
             </ScrollLink>
           ))}
@@ -35,7 +35,7 @@ export default function Header() {
         <button aria-label="Menu" aria-expanded={open} onClick={() => setOpen(!open)} className="font-semibold lg:hidden">{open ? "Close" : "Menu"}</button>
       </div>
       {open && (
-        <nav className="flex flex-col gap-4 border-t border-white/10 px-5 py-4 lg:hidden" onClick={() => setOpen(false)}>
+        <nav className="flex flex-col gap-4 border-t border-ink/10 px-5 py-4 lg:hidden" onClick={() => setOpen(false)}>
           {nav.map((n) => <ScrollLink key={n.id} id={n.id}>{n.label}</ScrollLink>)}
         </nav>
       )}

@@ -2,10 +2,11 @@
 export const site = {
   name: "The right Path",
   tagline: "Education • Admissions • Growth",
-  phone: "+91 00000 00000",
+  phone: "+91 9356888274",
+  phone2: "+91 7276420236",
   email: "info@yourdomain.in",
   address: "Chhatrapati Sambhajinagar, Maharashtra",
-  whatsapp: "https://wa.me/910000000000?text=Hello%2C%20I%20would%20like%20admission%20guidance.",
+  whatsapp: "https://wa.me/919356888274?text=Hello%2C%20I%20would%20like%20admission%20guidance.",
 };
 export const nav = [
   { id: "home", label: "Home" },
