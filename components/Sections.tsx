@@ -3,7 +3,7 @@ import ScrollLink from "./ScrollLink";
 import Reveal from "./Reveal";
 import Counter from "./Counter";
 import LeadForm from "./LeadForm";
-import { BrandingIcon } from "./Icons";
+import { BrandingIcon, ValueIcon } from "./Icons";
 
 export function Hero() {
   return (
@@ -34,21 +34,90 @@ export function Hero() {
   );
 }
 
+const values = [
+  {
+    type: "honest" as const,
+    title: "Honest guidance",
+    desc: "We never promise guaranteed admission or placement.",
+  },
+  {
+    type: "verified" as const,
+    title: "Verified information",
+    desc: "Admission dates and eligibility come from official sources.",
+  },
+  {
+    type: "student" as const,
+    title: "Student first",
+    desc: "Every recommendation starts with the student’s strengths and goals.",
+  },
+  {
+    type: "transparent" as const,
+    title: "Transparent work",
+    desc: "Fees, scope and any institutional referral arrangements are shared openly.",
+  },
+];
+
 export function About() {
   return (
     <>
       <section id="about" className="about-section">
         <Reveal>
           <h2 className="section-heading">About us</h2>
-          <p className="mt-5 about-text">
-            We are an independent education partner that connects students with informed decisions and helps institutions grow strategically through proven admission strategies and modern branding.
-          </p>
-          <p className="mt-4 text-ink/75">
-            We never promise guaranteed admission or placement. We give honest, verified guidance.
-          </p>
+          <div className="about-story">
+            <p className="mt-5 about-text">
+              The Right Path Consultants is an independent education consultancy based in Chhatrapati Sambhajinagar, Maharashtra. We help students and parents make informed decisions about courses, colleges and careers, and we help educational institutions strengthen their admissions, branding and development.
+            </p>
+            <p className="mt-4 about-text">
+              We started with a simple belief: a good education decision should never be a guess. Students need honest guidance based on their interests, marks and goals. Institutions need practical strategy, not empty promises. We work with both, and we stay clear about what we can and cannot do.
+            </p>
+          </div>
         </Reveal>
-        <Reveal delay={150}>
-          <div className="about-photo-placeholder">Founder photo</div>
+
+        <Reveal delay={120}>
+          <div className="about-mv-grid">
+            <div className="about-mv-card">
+              <div className="about-mv-icon-wrap">
+                <ValueIcon type="mission" />
+              </div>
+              <div>
+                <h3 className="about-mv-title">Our mission</h3>
+                <p className="about-mv-desc">
+                  To guide every student toward the right course and college, and to help institutions grow with clarity and integrity.
+                </p>
+              </div>
+            </div>
+
+            <div className="about-mv-card">
+              <div className="about-mv-icon-wrap">
+                <ValueIcon type="vision" />
+              </div>
+              <div>
+                <h3 className="about-mv-title">Our vision</h3>
+                <p className="about-mv-desc">
+                  To become a trusted education partner for families and institutions across Maharashtra.
+                </p>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+
+        <Reveal delay={180}>
+          <div className="about-values-container">
+            <h3 className="about-values-heading">What we stand for</h3>
+            <div className="about-values-grid">
+              {values.map((v) => (
+                <div key={v.title} className="about-value-item">
+                  <div className="about-value-icon">
+                    <ValueIcon type={v.type} />
+                  </div>
+                  <div>
+                    <h4 className="about-value-title">{v.title}</h4>
+                    <p className="about-value-desc">{v.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </Reveal>
       </section>
 
