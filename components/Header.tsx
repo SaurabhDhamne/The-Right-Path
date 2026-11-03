@@ -23,7 +23,9 @@ export default function Header() {
   return (
     <header className="site-header">
       <div className="header-container">
-        <ScrollLink id="home"><Logo /></ScrollLink>
+        <ScrollLink id="home" className="brand-link">
+          <Logo />
+        </ScrollLink>
         <nav className="nav-desktop">
           {nav.slice(1).map((n) => (
             <ScrollLink
