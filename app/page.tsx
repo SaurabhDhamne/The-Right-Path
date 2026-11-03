@@ -1,5 +1,5 @@
 import Header from "@/components/Header";
-import { Hero, About, Consultancy, Counselling, Projects, Resources, Faq, Contact, Footer } from "@/components/Sections";
+import { Hero, About, Consultancy, Counselling, Branding, Projects, Resources, Faq, Contact, Footer } from "@/components/Sections";
 
 export default function Home() {
   return (
@@ -10,6 +10,7 @@ export default function Home() {
         <About />
         <Consultancy />
         <Counselling />
+        <Branding />
         <Projects />
         <Resources />
         <Faq />

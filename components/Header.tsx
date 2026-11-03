@@ -21,25 +21,35 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 bg-white text-ink shadow-sm">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-1">
+    <header className="site-header">
+      <div className="header-container">
         <ScrollLink id="home"><Logo /></ScrollLink>
-        <nav className="hidden gap-6 text-sm font-semibold lg:flex">
+        <nav className="nav-desktop">
           {nav.slice(1).map((n) => (
-            <ScrollLink key={n.id} id={n.id} className={`border-b-2 py-1 transition-colors ${active === n.id ? "border-brand text-ink" : "border-transparent text-ink/60 hover:text-ink"}`}>
+            <ScrollLink
+              key={n.id}
+              id={n.id}
+              className={`nav-link ${active === n.id ? "nav-link-active" : "nav-link-inactive"}`}
+            >
               {n.label}
             </ScrollLink>
           ))}
         </nav>
-        <ScrollLink id="contact" className="hidden rounded-full bg-brand px-5 py-2 text-sm font-bold text-ink lg:block">Get guidance</ScrollLink>
-        <button aria-label="Menu" aria-expanded={open} onClick={() => setOpen(!open)} className="font-semibold lg:hidden">{open ? "Close" : "Menu"}</button>
+        <ScrollLink id="contact" className="btn-cta">Get guidance</ScrollLink>
+        <button aria-label="Menu" aria-expanded={open} onClick={() => setOpen(!open)} className="menu-toggle">
+          {open ? "Close" : "Menu"}
+        </button>
       </div>
       {open && (
-        <nav className="flex flex-col gap-4 border-t border-ink/10 px-5 py-4 lg:hidden" onClick={() => setOpen(false)}>
-          {nav.map((n) => <ScrollLink key={n.id} id={n.id}>{n.label}</ScrollLink>)}
+        <nav className="nav-mobile" onClick={() => setOpen(false)}>
+          {nav.map((n) => (
+            <ScrollLink key={n.id} id={n.id} className="py-1 font-medium">
+              {n.label}
+            </ScrollLink>
+          ))}
         </nav>
       )}
-      <div className="absolute bottom-0 left-0 h-0.5 bg-brand" style={{ width: `${progress}%` }} />
+      <div className="scroll-progress-bar" style={{ width: `${progress}%` }} />
     </header>
   );
 }

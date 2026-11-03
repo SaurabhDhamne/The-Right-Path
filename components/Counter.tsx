@@ -23,8 +23,8 @@ export default function Counter({ to, suffix = "", label }: { to: number; suffix
   }, [to]);
   return (
     <div ref={ref}>
-      <p className="font-display text-5xl font-bold text-brand md:text-6xl">{n.toLocaleString("en-IN")}{suffix}</p>
-      <p className="mt-2 text-mist">{label}</p>
+      <p className="stat-number">{n.toLocaleString("en-IN")}{suffix}</p>
+      <p className="stat-label">{label}</p>
     </div>
   );
 }
