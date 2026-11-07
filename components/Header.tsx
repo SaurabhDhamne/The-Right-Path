@@ -3,6 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { nav } from "@/lib/site";
 import { supabase } from "@/lib/supabase";
+import { syncUserProfile, UserProfile } from "@/app/actions/authActions";
 import ScrollLink from "./ScrollLink";
 import Logo from "./Logo";
 
@@ -11,6 +12,7 @@ export default function Header() {
   const [active, setActive] = useState("home");
   const [progress, setProgress] = useState(0);
   const [user, setUser] = useState<any>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -31,12 +33,31 @@ export default function Header() {
       if (el) io.observe(el);
     });
 
-    // Auth state
+    // Check & sync user auth state
+    const fetchProfile = async (sessionUser: any) => {
+      if (!sessionUser) {
+        setUser(null);
+        setProfile(null);
+        return;
+      }
+      setUser(sessionUser);
+      const res = await syncUserProfile({
+        userId: sessionUser.id,
+        email: sessionUser.email || "",
+      });
+      if (res.success && res.profile) {
+        setProfile(res.profile);
+      }
+    };
+
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user || null);
+      fetchProfile(session?.user || null);
     });
+
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      (_event, session) => setUser(session?.user || null)
+      (_event, session) => {
+        fetchProfile(session?.user || null);
+      }
     );
 
     // Close dropdown on outside click
@@ -59,15 +80,31 @@ export default function Header() {
     setDropdownOpen(false);
     await supabase.auth.signOut();
     setUser(null);
+    setProfile(null);
   };
 
-  // Build display info from user object
+  // Build display info
   const displayName: string =
+    profile?.full_name ||
     user?.user_metadata?.full_name ||
     user?.email?.split("@")[0] ||
     "User";
-  const displayEmail: string = user?.email || "";
+  const displayEmail: string = profile?.email || user?.email || "";
   const shortUid: string = user ? `RP-${user.id.slice(0, 6).toUpperCase()}` : "";
+  const roleDisplay = profile?.role === "admin" ? "Admin" : "Member";
+  const typeDisplay =
+    profile?.role === "admin"
+      ? "Administrator"
+      : profile?.user_type === "institution"
+      ? "Institution"
+      : "Student";
+
+  const portalLabel =
+    profile?.role === "admin"
+      ? "Admin Console"
+      : profile?.user_type === "institution"
+      ? "Institution Portal"
+      : "Student Portal";
 
   // Generate initials for avatar
   const initials = displayName
@@ -136,9 +173,14 @@ export default function Header() {
                       <div className="min-w-0">
                         <p className="font-bold text-base text-white truncate">{displayName}</p>
                         <p className="text-xs text-white/70 truncate">{displayEmail}</p>
-                        <span className="inline-block mt-1 px-2 py-0.5 rounded bg-white/10 font-mono text-[10px] text-white/80">
-                          {shortUid}
-                        </span>
+                        <div className="flex items-center gap-1.5 mt-1">
+                          <span className="inline-block px-2 py-0.5 rounded bg-white/10 font-mono text-[10px] text-white/80">
+                            {shortUid}
+                          </span>
+                          <span className="inline-block px-2 py-0.5 rounded bg-brand/20 text-brand font-bold text-[10px] uppercase">
+                            {typeDisplay}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -153,7 +195,7 @@ export default function Header() {
                       <svg className="w-4 h-4 text-ink/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                       </svg>
-                      Dashboard
+                      <span>{portalLabel}</span>
                       <span className="ml-auto w-2 h-2 rounded-full bg-brand animate-pulse" />
                     </Link>
 
@@ -167,7 +209,11 @@ export default function Header() {
                       </div>
                       <div className="flex items-center justify-between text-xs">
                         <span className="text-ink/50 font-medium">Role</span>
-                        <span className="font-bold text-ink capitalize">Admin</span>
+                        <span className="font-bold text-ink capitalize">{roleDisplay}</span>
+                      </div>
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-ink/50 font-medium">Account Type</span>
+                        <span className="font-bold text-ink capitalize">{typeDisplay}</span>
                       </div>
                     </div>
 
@@ -227,11 +273,17 @@ export default function Header() {
                   <div className="min-w-0">
                     <p className="font-bold text-sm text-ink truncate">{displayName}</p>
                     <p className="text-xs text-ink/60 truncate">{displayEmail}</p>
+                    <span className="inline-block mt-0.5 px-1.5 py-0.5 rounded bg-brand/20 text-brand font-bold text-[9px] uppercase">
+                      {typeDisplay}
+                    </span>
                   </div>
                 </div>
-                <Link href="/dashboard" className="flex items-center gap-2 py-1.5 px-3 rounded-lg bg-ink text-white text-xs font-bold w-full">
-                  Dashboard
-                  <span className="w-2 h-2 rounded-full bg-brand ml-1" />
+                <Link
+                  href="/dashboard"
+                  className="flex items-center justify-between py-2 px-3 rounded-lg bg-ink text-white text-xs font-bold w-full"
+                >
+                  <span>{portalLabel}</span>
+                  <span className="w-2 h-2 rounded-full bg-brand" />
                 </Link>
                 <button
                   onClick={handleSignOut}

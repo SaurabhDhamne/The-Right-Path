@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { supabase } from "@/lib/supabase";
+import { syncUserProfile, UserType } from "@/app/actions/authActions";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -13,16 +14,17 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
+  const [userType, setUserType] = useState<UserType>("student");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  // If already logged in, redirect to homepage
+  // If already logged in, redirect to dashboard dispatcher
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        router.push("/");
+        router.push("/dashboard");
       }
     });
   }, [router]);
@@ -38,12 +40,22 @@ export default function LoginPage() {
       password,
     });
 
-    setLoading(false);
-
     if (error) {
+      setLoading(false);
       setErrorMsg(error.message || "Invalid email or password.");
-    } else if (data.session) {
-      router.push("/");
+      return;
+    }
+
+    if (data.session) {
+      // Sync profile & update last_login_at
+      await syncUserProfile({
+        userId: data.session.user.id,
+        email: data.session.user.email || "",
+      });
+
+      router.push("/dashboard");
+    } else {
+      setLoading(false);
     }
   };
 
@@ -66,6 +78,7 @@ export default function LoginPage() {
         data: {
           full_name: fullName.trim(),
           phone: phone.trim(),
+          user_type: userType,
         },
       },
     });
@@ -76,34 +89,45 @@ export default function LoginPage() {
       return;
     }
 
-    // If signup returned a session directly (email confirm OFF), go to homepage
+    // If signup returned a session directly (email confirmation OFF)
     if (signUpData.session) {
-      router.push("/");
+      await syncUserProfile({
+        userId: signUpData.session.user.id,
+        email: signUpData.session.user.email || "",
+        fullName: fullName.trim(),
+        phone: phone.trim(),
+        userType,
+      });
+
+      router.push("/dashboard");
       return;
     }
 
-    // Email confirm OFF but session not returned — try signing in immediately
+    // Email confirm OFF but session not returned — try auto sign-in
     if (signUpData.user && !signUpData.session) {
       const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
         email: email.trim(),
         password,
       });
 
-      setLoading(false);
+      if (!signInError && signInData.session) {
+        await syncUserProfile({
+          userId: signInData.session.user.id,
+          email: signInData.session.user.email || "",
+          fullName: fullName.trim(),
+          phone: phone.trim(),
+          userType,
+        });
 
-      if (signInError) {
-        setSuccessMsg(
-          "Account created! Please check your email inbox to confirm your account, then sign in."
-        );
-        setTab("signin");
-      } else if (signInData.session) {
-        router.push("/");
+        router.push("/dashboard");
+        return;
       }
-      return;
     }
 
     setLoading(false);
-    setSuccessMsg("Account created! Please check your email to confirm, then sign in.");
+    setSuccessMsg(
+      "Account registered! If confirmation is enabled, check your email inbox to verify, then sign in."
+    );
     setTab("signin");
   };
 
@@ -126,14 +150,14 @@ export default function LoginPage() {
           </h2>
           <p className="mt-1 text-center text-sm text-ink/70">
             {tab === "signin"
-              ? "Access your dashboard and enquiry status"
-              : "Register to manage consultations & tracking"}
+              ? "Access your student or institutional portal"
+              : "Register to track applications and institutional strategy"}
           </p>
         </div>
       </div>
 
       <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-6 shadow-xl shadow-ink/5 rounded-2xl border border-ink/10 sm:px-10">
+        <div className="bg-white py-8 px-6 shadow-xl shadow-ink/5 rounded-3xl border border-ink/10 sm:px-10">
           {/* Tab Switcher */}
           <div className="flex rounded-full bg-paper p-1 mb-6 border border-ink/10">
             <button
@@ -191,26 +215,63 @@ export default function LoginPage() {
           <form onSubmit={tab === "signin" ? handleSignIn : handleSignUp} className="space-y-4">
             {tab === "signup" && (
               <>
+                {/* Account Type Selector (Mandatory) */}
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-ink/75 mb-1.5">
-                    Full Name
+                    Account Type (Select one)
+                  </label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setUserType("student")}
+                      className={`p-3 rounded-xl border text-left transition-all ${
+                        userType === "student"
+                          ? "border-brand bg-brand/10 text-ink shadow-sm ring-1 ring-brand"
+                          : "border-ink/15 bg-paper/50 text-ink/70 hover:border-ink/30"
+                      }`}
+                    >
+                      <span className="text-base block mb-0.5">🎓</span>
+                      <p className="font-bold text-xs text-ink leading-tight">Student / Parent</p>
+                      <p className="text-[10px] text-ink/60 mt-0.5">Admissions & Courses</p>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setUserType("institution")}
+                      className={`p-3 rounded-xl border text-left transition-all ${
+                        userType === "institution"
+                          ? "border-brand bg-brand/10 text-ink shadow-sm ring-1 ring-brand"
+                          : "border-ink/15 bg-paper/50 text-ink/70 hover:border-ink/30"
+                      }`}
+                    >
+                      <span className="text-base block mb-0.5">🏛️</span>
+                      <p className="font-bold text-xs text-ink leading-tight">Institution</p>
+                      <p className="text-[10px] text-ink/60 mt-0.5">Colleges & Schools</p>
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-ink/75 mb-1.5">
+                    {userType === "student" ? "Student Full Name" : "Representative Name / College"}
                   </label>
                   <input
                     type="text"
                     required
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    placeholder="e.g. Rahul Sharma"
+                    placeholder={userType === "student" ? "e.g. Rahul Sharma" : "e.g. Dr. Anil Patil (Director)"}
                     className="form-field"
                   />
                 </div>
 
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-ink/75 mb-1.5">
-                    Phone Number
+                    Phone / WhatsApp Number
                   </label>
                   <input
                     type="tel"
+                    required
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="+91 98765 43210"
@@ -222,7 +283,7 @@ export default function LoginPage() {
 
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-ink/75 mb-1.5">
-                Email Address
+                {tab === "signup" && userType === "institution" ? "Official College Email" : "Email Address"}
               </label>
               <input
                 type="email"
@@ -272,9 +333,9 @@ export default function LoginPage() {
               {loading ? (
                 <span>Please wait...</span>
               ) : tab === "signin" ? (
-                "Sign In"
+                "Sign In →"
               ) : (
-                "Create Account"
+                `Register as ${userType === "student" ? "Student" : "Institution"} →`
               )}
             </button>
           </form>

@@ -1,14 +1,7 @@
 "use server";
 
-import { createClient } from "@supabase/supabase-js";
-
-const supabaseUrl =
-  process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || "";
-const supabaseKey =
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-  process.env.SUPABASE_PUBLISHABLE_KEY ||
-  process.env.SUPABASE_SECRET_KEY ||
-  "";
+import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { logActivity } from "./authActions";
 
 export type LeadPayload = {
   kind: "student" | "institution" | "branding";
@@ -24,25 +17,39 @@ export type LeadPayload = {
   branding_service?: string | null;
   requirement_notes?: string | null;
   consent: boolean;
+  authToken?: string | null; // Cryptographically signed JWT token from supabase.auth
 };
 
 export async function submitLead(payload: LeadPayload) {
-  if (!supabaseUrl || !supabaseKey) {
-    console.error("Supabase URL or Key missing in environment variables");
-    return {
-      success: false,
-      error: "Database configuration is missing. Please check .env.local",
-    };
-  }
-
   try {
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    // 1. Cryptographically verify the session token on the server
+    // Never trust a client-supplied user ID
+    let verifiedUserId: string | null = null;
+    let verifiedUserEmail: string | null = null;
+    let verifiedUserName: string | null = null;
+
+    if (payload.authToken && payload.authToken.trim()) {
+      const {
+        data: { user },
+        error: authErr,
+      } = await supabaseAdmin.auth.getUser(payload.authToken);
+
+      if (!authErr && user) {
+        verifiedUserId = user.id;
+        verifiedUserEmail = user.email || null;
+        verifiedUserName =
+          user.user_metadata?.full_name || user.email?.split("@")[0] || null;
+      }
+    }
+
+    const isAuth = Boolean(verifiedUserId);
+    const submissionType = isAuth ? "authenticated" : "guest";
 
     const record = {
       kind: payload.kind,
-      name: payload.name.trim(),
+      name: payload.name.trim(), // Name of the applicant/lead for this enquiry
       phone: payload.phone.trim(),
-      email: payload.email?.trim() || null,
+      email: payload.email?.trim() || verifiedUserEmail || null,
       city: payload.city?.trim() || null,
       exam: payload.exam || null,
       course: payload.course || null,
@@ -53,22 +60,45 @@ export async function submitLead(payload: LeadPayload) {
       requirement_notes: payload.requirement_notes?.trim() || null,
       consent: payload.consent,
       status: "new",
+      user_id: verifiedUserId, // Guaranteed safe: extracted strictly from verified token
+      submission_type: submissionType,
     };
 
-    const { data, error } = await supabase
+    // Use admin client so it reliably inserts into database
+    const { data, error } = await supabaseAdmin
       .from("leads")
       .insert([record])
-      .select();
+      .select()
+      .single();
 
     if (error) {
-      console.error("Supabase insert error:", error);
+      console.error("Supabase insert lead error:", error);
       return { success: false, error: error.message };
     }
 
-    const inserted = data && data[0];
+    const inserted = data;
     const uid = inserted
       ? (inserted.uid as string) || `RP-${inserted.id.slice(0, 5).toUpperCase()}`
       : undefined;
+
+    // Log the submission in activity_logs
+    await logActivity({
+      actor_id: verifiedUserId,
+      actor_name: verifiedUserName || payload.name.trim(),
+      actor_email: verifiedUserEmail || payload.email?.trim() || null,
+      action: "lead_submitted",
+      entity_type: "lead",
+      entity_id: inserted?.id,
+      details: {
+        uid,
+        kind: payload.kind,
+        submission_type: submissionType,
+        applicant_name: payload.name.trim(),
+        authenticated_account: verifiedUserEmail || "Guest",
+        course_or_service:
+          payload.course || payload.branding_service || "Institutional Consulting",
+      },
+    });
 
     return { success: true, uid };
   } catch (err: any) {
