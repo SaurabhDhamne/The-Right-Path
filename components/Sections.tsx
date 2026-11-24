@@ -10,19 +10,19 @@ export function Hero() {
     <section id="home" className="hero-section">
       <div className="hero-grid">
         <div>
-          <h1 className="hero-title">Empowering students. Strengthening institutions.</h1>
+          <h1 className="hero-title">Empowering Students. Strengthening Institutions.</h1>
           <p className="hero-subtitle">
             Personalised Career Guidance, Admissions Consultancy, Strategic Planning and High-impact Branding for Educational Institutions in Maharashtra and beyond.
           </p>
         </div>
         <div className="hero-actions">
           <ScrollLink id="counselling" className="hero-card-brand">
-            <p className="hero-card-title">For students and parents</p>
-            <p className="hero-card-desc">Courses, colleges and admissions. Get guidance →</p>
+            <p className="hero-card-title">For Students and Parents</p>
+            <p className="hero-card-desc">Courses, Colleges and Admissions. Get Guidance →</p>
           </ScrollLink>
           <ScrollLink id="consultancy" className="hero-card-outline">
-            <p className="hero-card-title">For educational institutions</p>
-            <p className="hero-card-desc">Admissions, consultancy and growth. Discuss a project →</p>
+            <p className="hero-card-title">For Educational Institutions</p>
+            <p className="hero-card-desc">Admissions, Consultancy and Growth. Discuss a project →</p>
           </ScrollLink>
           <ScrollLink id="branding" className="hero-card-outline">
             <p className="hero-card-title">Branding & Performance Marketing</p>
