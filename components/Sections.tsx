@@ -12,7 +12,7 @@ export function Hero() {
         <div>
           <h1 className="hero-title">Empowering students. Strengthening institutions.</h1>
           <p className="hero-subtitle">
-            Personalised Career Guidance, Admissions Consultancy, Strategic Planning and High-impact Branding for Educational Institutions in Maharashtra afnd beyond.
+            Personalised Career Guidance, Admissions Consultancy, Strategic Planning and High-impact Branding for Educational Institutions in Maharashtra and beyond.
           </p>
         </div>
         <div className="hero-actions">
@@ -38,22 +38,22 @@ const values = [
   {
     type: "honest" as const,
     title: "Honest guidance",
-    desc: "We never promise guaranteed admission or placement.",
+    desc: "We Provide Honest Guidance to Institutions and Students, ensuring realistic expectations and outcomes.",
   },
   {
     type: "verified" as const,
     title: "Verified information",
-    desc: "Admission dates and eligibility come from official sources.",
+    desc: "We share Genuine Information from official sources.",
   },
   {
     type: "student" as const,
     title: "Student first",
-    desc: "Every recommendation starts with the student’s strengths and goals.",
+    desc: "We provide all Educational solutions with Student centric approach.",
   },
   {
     type: "transparent" as const,
     title: "Transparent work",
-    desc: "Fees, scope and any institutional referral arrangements are shared openly.",
+    desc: "We maintain Clarity and Trust with our clients.",
   },
 ];
 
@@ -65,10 +65,13 @@ export function About() {
           <h2 className="section-heading">About us</h2>
           <div className="about-story">
             <p className="mt-5 about-text">
-              The Right Path Consultants is an Independent educational consultancy based in Chhatrapati Sambhajinagar, Maharashtra. We help students and parents make informed decisions about courses, colleges and careers and we help educational institutions strengthen their admissions, branding and development.
+              The Right Path Consultants is an Educational Consultancy based in Chhatrapati Sambhajinagar, Maharashtra. We help students and parents make informed decisions about courses, colleges and careers and we help educational institutions strengthen their Brand value , Overall Development and Admissions.
             </p>
             <p className="mt-4 about-text">
-              We started with a simple belief: a good education decision should never be a guess. Students need honest guidance based on their interests, marks and goals. Institutions need practical strategy, not empty promises. We work with both, and we stay clear and transparent about the possible and feasible solutions.
+              A good education decision should never be a guess. Students need honest guidance based on their interests, marks and goals. Institutions need Viable strategy and Planning.
+            </p>
+            <p className="mt-4 about-text">
+              We work with both, Instituions and Students, we stay clear and transparent about the possible and feasible solutions.
             </p>
           </div>
         </Reveal>
@@ -80,9 +83,9 @@ export function About() {
                 <ValueIcon type="mission" />
               </div>
               <div>
-                <h3 className="about-mv-title">Our mission</h3>
+                <h3 className="about-mv-title">Our Vision</h3>
                 <p className="about-mv-desc">
-                  To guide every student towards the right career and help institutions grow with clarity and integrity.
+                  To redefine the future of education through trust, innovation, and excellence.
                 </p>
               </div>
             </div>
@@ -92,9 +95,9 @@ export function About() {
                 <ValueIcon type="vision" />
               </div>
               <div>
-                <h3 className="about-mv-title">Our vision</h3>
+                <h3 className="about-mv-title">Our Mission</h3>
                 <p className="about-mv-desc">
-                  To become a trusted education partner for families and institutions across Maharashtra.
+                  To guide institutions and students towards success through innovative branding, expert counselling, and the right educational opportunities.
                 </p>
               </div>
             </div>
@@ -151,7 +154,7 @@ export function Consultancy() {
   return (
     <section id="consultancy" className="section-container">
       <h2 className="section-heading">Institutional consultancy</h2>
-      <p className="section-description">For college management, directors, principals and admission teams.</p>
+      <p className="section-description"> </p>
       <Cards items={consultancy} />
     </section>
   );
