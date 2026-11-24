@@ -12,7 +12,7 @@ export function Hero() {
         <div>
           <h1 className="hero-title">Empowering students. Strengthening institutions.</h1>
           <p className="hero-subtitle">
-            Personalised admission guidance, strategic consultancy, and high-impact branding for educational institutions in Chhatrapati Sambhajinagar and beyond.
+            Personalised Career Guidance, Admissions Consultancy, Strategic Planning and High-impact Branding for Educational Institutions in Maharashtra afnd beyond.
           </p>
         </div>
         <div className="hero-actions">
@@ -65,10 +65,10 @@ export function About() {
           <h2 className="section-heading">About us</h2>
           <div className="about-story">
             <p className="mt-5 about-text">
-              The Right Path Consultants is an independent education consultancy based in Chhatrapati Sambhajinagar, Maharashtra. We help students and parents make informed decisions about courses, colleges and careers, and we help educational institutions strengthen their admissions, branding and development.
+              The Right Path Consultants is an Independent educational consultancy based in Chhatrapati Sambhajinagar, Maharashtra. We help students and parents make informed decisions about courses, colleges and careers and we help educational institutions strengthen their admissions, branding and development.
             </p>
             <p className="mt-4 about-text">
-              We started with a simple belief: a good education decision should never be a guess. Students need honest guidance based on their interests, marks and goals. Institutions need practical strategy, not empty promises. We work with both, and we stay clear about what we can and cannot do.
+              We started with a simple belief: a good education decision should never be a guess. Students need honest guidance based on their interests, marks and goals. Institutions need practical strategy, not empty promises. We work with both, and we stay clear and transparent about the possible and feasible solutions.
             </p>
           </div>
         </Reveal>
@@ -82,11 +82,11 @@ export function About() {
               <div>
                 <h3 className="about-mv-title">Our mission</h3>
                 <p className="about-mv-desc">
-                  To guide every student toward the right course and college, and to help institutions grow with clarity and integrity.
+                  To guide every student towards the right career and help institutions grow with clarity and integrity.
                 </p>
               </div>
             </div>
-
+    
             <div className="about-mv-card">
               <div className="about-mv-icon-wrap">
                 <ValueIcon type="vision" />
