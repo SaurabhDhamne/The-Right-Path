@@ -15,8 +15,8 @@ export const nav = [
   { id: "consultancy", label: "Consultancy" },
   { id: "counselling", label: "Student Counselling" },
   { id: "branding", label: "Branding" },
-  { id: "projects", label: "Our Projects" },
-  { id: "resources", label: "Resources" },
+  // { id: "projects", label: "Our Projects" },
+  // { id: "resources", label: "Resources" },
   { id: "contact", label: "Contact" },
 ];
 
@@ -41,19 +41,18 @@ export const stats = [
 ];
 
 export const consultancy = [
-  { t: "Admission planning", d: "Improve lead conversion and the admission process end to end." },
-  { t: "Student outreach", d: "Regional recruitment strategies that reach the right families." },
-  { t: "Branding and positioning", d: "A clear institutional identity that parents and students trust." },
-  { t: "Digital presence", d: "Website, content and social media planning." },
-  { t: "Enquiry handling review", d: "Find where enquiries drop off and fix it." },
-  { t: "Institutional development", d: "Workshops, faculty development and periodic performance reviews." },
+  { t: "Branding and positioning", d: "We help Institutions Enhance their Brand value." },
+  { t: "Institutional development", d: "Faculty Development, Infrastructure development and Quality Assurance" },
+  { t: "Admission planning", d: "Improve lead conversion and the admission process." },
+  { t: "Social presence", d: "Website, content and social media planning." },
+  { t: "Digital Marketing", d: "Meta Ads, Paid Promotions and Campaign Management." },
 ];
 
 export const counselling = [
-  { t: "Course and career selection", d: "Match interests and marks to the right course." },
-  { t: "College shortlisting", d: "Compare colleges on location, course and fit." },
-  { t: "Admission and CAP guidance", d: "Documents, eligibility, rounds and verified dates." },
-  { t: "Parent sessions", d: "Online and offline one-to-one counselling." },
+  { t: "Career Path Design", d: "We help students design a clear career path based on their interests and goals." },
+  { t: "Admission Guidance", d: "Right from counselling to college selection." },
+  { t: "Aptitude and Soft skill training", d: "Making students future Ready." },
+  { t: "Parenting Sessions", d: "Online and offline one-to-one counselling." },
 ];
 
 export const brandingServices = [
@@ -124,5 +123,4 @@ export const faqs = [
   { q: "Is counselling online or in person?", a: "Both options are available. Choose one when you request an appointment." },
   { q: "How are your fees decided?", a: "Student counselling fees and institutional proposals are shared clearly before you engage us." },
   { q: "Do you offer complete branding and marketing support?", a: "Yes. From Meta & Google Ads to Web Dev, SEO, and Outsource Marketing, we handle entire institutional growth campaigns." },
-  { q: "Do you earn commission from colleges?", a: "Any referral arrangement with an institution will be disclosed to you." },
 ];

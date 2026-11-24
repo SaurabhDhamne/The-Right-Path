@@ -11,8 +11,8 @@ export default function Home() {
         <Consultancy />
         <Counselling />
         <Branding />
-        <Projects />
-        <Resources />
+        {/* <Projects /> */}
+        {/* <Resources /> */}
         <Faq />
         <Contact />
       </main>

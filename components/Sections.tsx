@@ -164,8 +164,8 @@ export function Counselling() {
   return (
     <section id="counselling" className="counselling-bg">
       <div className="section-container">
-        <h2 className="section-heading">Student counselling</h2>
-        <p className="section-description">Clear guidance for students and parents, from course choice to admission.</p>
+        <h2 className="section-heading">Student Development </h2>
+        <p className="section-description"></p>
         <Cards items={counselling} />
         <div className="steps-grid">
           {steps.map((s, i) => (
@@ -200,7 +200,7 @@ export function Branding() {
         </Reveal>
 
         <div className="branding-grid">
-          {brandingServices.map((b, i) => (
+          {brandingServices.filter((b) => b.t.toLowerCase() !== "seo").map((b, i) => (
             <Reveal key={b.t} delay={i * 70}>
               <div className="branding-card">
                 <div>
